@@ -3,7 +3,6 @@ using OpenTK.Windowing.Common;
 using OpenTK.Windowing.Desktop;
 using OpenTK.Windowing.GraphicsLibraryFramework;
 using MinecraftCS.Core;
-using System.Diagnostics;
 
 namespace MinecraftCS
 {
@@ -32,8 +31,6 @@ namespace MinecraftCS
         private int _vertexArrayObject;
 
         private Shader _shader;
-
-        private Stopwatch _timer;
 
         #endregion
 
