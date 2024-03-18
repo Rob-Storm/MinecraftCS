@@ -10,16 +10,18 @@ namespace MinecraftCS
     {
         #region Properties and Fields
 
-        public float[] vertices = 
+        private readonly float[] _vertices = 
             {
                 -0.5f, -0.5f, 0.0f,
                 0.5f, -0.5f, 0.0f, 
                 0.0f,  0.5f, 0.0f  
             };
 
-        public int VertexBufferObject;
+        private int _vertexBufferObject;
 
-        public Shader shader;
+        private int _vertexArrayObject;
+
+        private Shader _shader;
 
         #endregion
 
@@ -44,16 +46,37 @@ namespace MinecraftCS
 
             GL.ClearColor(0.2f, 0.3f, 0.3f, 1.0f);
 
+            _vertexBufferObject = GL.GenBuffer();
+
+            GL.BindBuffer(BufferTarget.ArrayBuffer, _vertexBufferObject);
+
+            GL.BufferData(BufferTarget.ArrayBuffer, _vertices.Length * sizeof(float), _vertices, BufferUsageHint.StaticDraw);
+
+            _vertexArrayObject = GL.GenVertexArray();
+            GL.BindVertexArray(_vertexArrayObject);
+
+            GL.VertexAttribPointer(0, 3, VertexAttribPointerType.Float, false, 3 * sizeof(float), 0);
+
+            GL.EnableVertexAttribArray(0);
+
+            _shader = new Shader(@"C:\Users\The1Wolfcast\source\repos\MinecraftCS\MinecraftCS\Shaders\shader.vert", @"C:\Users\The1Wolfcast\source\repos\MinecraftCS\MinecraftCS\Shaders\shader.frag");
+
+            _shader.Use();
+
+        }
+
+        protected override void OnRenderFrame(FrameEventArgs args)
+        {
+            base.OnRenderFrame(args);
+
+            GL.Clear(ClearBufferMask.ColorBufferBit);
+
+            _shader.Use();
+
+            GL.BindVertexArray(_vertexArrayObject);
+            GL.DrawArrays(PrimitiveType.Triangles, 0, 3);
+
             SwapBuffers();
-
-            VertexBufferObject = GL.GenBuffer();
-
-            GL.BindBuffer(BufferTarget.ArrayBuffer, VertexBufferObject);
-
-            GL.BufferData(BufferTarget.ArrayBuffer, vertices.Length * sizeof(float), vertices, BufferUsageHint.StaticDraw);
-
-            GL.BindBuffer(BufferTarget.ArrayBuffer, 0);
-            GL.DeleteBuffer(VertexBufferObject);
         }
 
         protected override void OnFramebufferResize(FramebufferResizeEventArgs e)
@@ -61,6 +84,13 @@ namespace MinecraftCS
             base.OnFramebufferResize(e);
 
             GL.Viewport(0, 0, e.Width, e.Height);
+        }
+
+        protected override void OnUnload()
+        {
+            base.OnUnload();
+
+            _shader.Dispose();
         }
     }
 }
