@@ -3,6 +3,7 @@ using OpenTK.Windowing.Common;
 using OpenTK.Windowing.Desktop;
 using OpenTK.Windowing.GraphicsLibraryFramework;
 using MinecraftCS.Core;
+using System.Diagnostics;
 
 namespace MinecraftCS
 {
@@ -10,13 +11,13 @@ namespace MinecraftCS
     {
         #region Properties and Fields
 
-        private readonly float[] _vertices = 
-            {
-                0.5f, 0.5f, 0.0f,
-                0.5f, -0.5f, 0.0f,
-                -0.5f, -0.5f, 0.0f, 
-                -0.5f,  0.5f, 0.0f  
-            };
+        private readonly float[] _vertices =
+        {
+            // positions        // colors
+            0.5f, -0.5f, 0.0f,  1.0f, 0.0f, 0.0f,   // bottom right
+            -0.5f, -0.5f, 0.0f,  0.0f, 1.0f, 0.0f,   // bottom left
+            0.0f,  0.5f, 0.0f,  0.0f, 0.0f, 1.0f    // top 
+        };
 
         private uint[] _indices =
         {
@@ -31,6 +32,8 @@ namespace MinecraftCS
         private int _vertexArrayObject;
 
         private Shader _shader;
+
+        private Stopwatch _timer;
 
         #endregion
 
@@ -66,9 +69,11 @@ namespace MinecraftCS
             _vertexArrayObject = GL.GenVertexArray();
             GL.BindVertexArray(_vertexArrayObject);
 
-            GL.VertexAttribPointer(0, 3, VertexAttribPointerType.Float, false, 3 * sizeof(float), 0);
-
+            GL.VertexAttribPointer(0, 3, VertexAttribPointerType.Float, false, 6 * sizeof(float), 0);
             GL.EnableVertexAttribArray(0);
+
+            GL.VertexAttribPointer(1, 3, VertexAttribPointerType.Float, false, 6 * sizeof(float), 3 * sizeof(float));
+            GL.EnableVertexAttribArray(1);
 
             _elementBufferObject = GL.GenBuffer();
 
@@ -78,6 +83,9 @@ namespace MinecraftCS
             _shader = new Shader(@"C:\Users\The1Wolfcast\source\repos\MinecraftCS\MinecraftCS\Shaders\shader.vert", @"C:\Users\The1Wolfcast\source\repos\MinecraftCS\MinecraftCS\Shaders\shader.frag");
 
             _shader.Use();
+
+            _timer = new Stopwatch();
+            _timer.Start();
 
         }
 
@@ -89,8 +97,16 @@ namespace MinecraftCS
 
             _shader.Use();
 
+
+            double timeValue = _timer.Elapsed.TotalSeconds;
+            float greenValue = (float)Math.Sin(timeValue) / 2.0f + 0.5f;
+            int vertexColorLocation = GL.GetUniformLocation(_shader.Handle, "ourColor");
+            GL.Uniform4(vertexColorLocation, 0.0f, greenValue, 0.0f, 1.0f);
+
+
             GL.BindVertexArray(_vertexArrayObject);
-            GL.DrawElements(PrimitiveType.Triangles, _indices.Length, DrawElementsType.UnsignedInt, 0);
+            //GL.DrawElements(PrimitiveType.Triangles, _indices.Length, DrawElementsType.UnsignedInt, 0);
+            GL.DrawArrays(PrimitiveType.Triangles, 0, 3);
 
             SwapBuffers();
         }
