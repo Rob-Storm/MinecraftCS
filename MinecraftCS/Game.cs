@@ -75,6 +75,7 @@ namespace MinecraftCS
             GL.VertexAttribPointer(1, 3, VertexAttribPointerType.Float, false, 6 * sizeof(float), 3 * sizeof(float));
             GL.EnableVertexAttribArray(1);
 
+
             _elementBufferObject = GL.GenBuffer();
 
             GL.BindBuffer(BufferTarget.ElementArrayBuffer, _elementBufferObject);
@@ -96,13 +97,6 @@ namespace MinecraftCS
             GL.Clear(ClearBufferMask.ColorBufferBit);
 
             _shader.Use();
-
-
-            double timeValue = _timer.Elapsed.TotalSeconds;
-            float greenValue = (float)Math.Sin(timeValue) / 2.0f + 0.5f;
-            int vertexColorLocation = GL.GetUniformLocation(_shader.Handle, "ourColor");
-            GL.Uniform4(vertexColorLocation, 0.0f, greenValue, 0.0f, 1.0f);
-
 
             GL.BindVertexArray(_vertexArrayObject);
             //GL.DrawElements(PrimitiveType.Triangles, _indices.Length, DrawElementsType.UnsignedInt, 0);

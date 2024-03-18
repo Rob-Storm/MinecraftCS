@@ -4,7 +4,7 @@ namespace MinecraftCS.Core
 {
     public class Shader : IDisposable
     {
-        public int Handle;
+        int Handle;
         private bool disposedValue = false;
 
         public Shader(string vertexPath, string fragmentPath)
