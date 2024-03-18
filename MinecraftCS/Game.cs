@@ -12,10 +12,9 @@ namespace MinecraftCS
 
         private readonly float[] _vertices =
         {
-            // positions        // colors
-            0.5f, -0.5f, 0.0f,  1.0f, 0.0f, 0.0f,   // bottom right
-            -0.5f, -0.5f, 0.0f,  0.0f, 1.0f, 0.0f,   // bottom left
-            0.0f,  0.5f, 0.0f,  0.0f, 0.0f, 1.0f    // top 
+            0.5f, -0.5f, 0.0f,  1.0f, 0.0f, 0.0f,
+            -0.5f, -0.5f, 0.0f,  0.0f, 1.0f, 0.0f,
+            0.0f,  0.5f, 0.0f,  0.0f, 0.0f, 1.0f
         };
 
         private uint[] _indices =
@@ -81,9 +80,6 @@ namespace MinecraftCS
             _shader = new Shader(@"C:\Users\The1Wolfcast\source\repos\MinecraftCS\MinecraftCS\Shaders\shader.vert", @"C:\Users\The1Wolfcast\source\repos\MinecraftCS\MinecraftCS\Shaders\shader.frag");
 
             _shader.Use();
-
-            _timer = new Stopwatch();
-            _timer.Start();
 
         }
 
